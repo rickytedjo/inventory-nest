@@ -1,0 +1,59 @@
+// use prisma-8
+
+model User {
+  id String @id @onCreate(uuid())
+
+  username String 
+  password String
+
+  createdAt DateTime @default(now()) @onCreate(now())
+  updatedAt temporal.UpdatedAt
+
+  CreatedItems Item[] @relation("CreatedBy")
+  LastUpdatedItems Item[] @relation("LastUpdatedBy")
+  CreatedCategories Kategori[] @relation("CreatedBy")
+  LastUpdatedCategories Kategori[] @relation("LastUpdatedBy")
+  @@map("user")
+}
+
+model Item {
+  id String @id @onCreate(uuid())
+  kategori_id String
+
+  name String
+  price Int
+  stock Int
+
+  createdBy String
+  updatedBy String
+
+  createdAt DateTime @default(now()) @onCreate(now())
+  updatedAt temporal.UpdatedAt
+
+  Kategori Kategori @relation(fields: [kategori_id], references: [id], onDelete: Cascade)
+
+  CreatedBy User @relation("CreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  LastUpdatedBy User @relation("LastUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
+
+  @@map("item")
+}
+
+model Kategori {
+  id String @id @onCreate(uuid())
+
+  name String
+  description String?
+
+  createdBy String
+  updatedBy String
+
+  createdAt DateTime @default(now()) @onCreate(now())
+  updatedAt temporal.UpdatedAt
+
+  CreatedBy User @relation("CreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  LastUpdatedBy User @relation("LastUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
+
+  Items Item[]
+
+  @@map("kategori")
+}

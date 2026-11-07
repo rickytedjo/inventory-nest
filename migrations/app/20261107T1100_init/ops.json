@@ -1,0 +1,666 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.item",
+    "label": "Create table \"item\"",
+    "summary": "Creates table \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"item\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"item\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"item\"",
+        "sql": "CREATE TABLE \"public\".\"item\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"createdBy\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"kategori_id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"price\" int4 NOT NULL,\n  \"stock\" int4 NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  \"updatedBy\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"item\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"item\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"item\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.kategori",
+    "label": "Create table \"kategori\"",
+    "summary": "Creates table \"kategori\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "kategori"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"kategori\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"kategori\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"kategori\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"kategori\"",
+        "sql": "CREATE TABLE \"public\".\"kategori\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"createdBy\" text NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  \"updatedBy\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"kategori\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"kategori\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"kategori\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"user\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"password\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"user\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"user\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "index.item.item_createdBy_idx_ba0f792f",
+    "label": "Create index \"item_createdBy_idx_ba0f792f\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "item_createdBy_idx_ba0f792f",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"item_createdBy_idx_ba0f792f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"item_createdBy_idx_ba0f792f\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"item_createdBy_idx_ba0f792f\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"item_createdBy_idx_ba0f792f\"",
+        "sql": "CREATE INDEX \"item_createdBy_idx_ba0f792f\" ON \"public\".\"item\" (\"createdBy\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"item_createdBy_idx_ba0f792f\" exists on \"item\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"item_createdBy_idx_ba0f792f\"",
+          "i",
+          "I",
+          "\"public\".\"item\"",
+          "btree",
+          "[\"createdBy\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.item.item_kategori_id_idx_87b606fe",
+    "label": "Create index \"item_kategori_id_idx_87b606fe\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "item_kategori_id_idx_87b606fe",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"item_kategori_id_idx_87b606fe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"item_kategori_id_idx_87b606fe\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"item_kategori_id_idx_87b606fe\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"item_kategori_id_idx_87b606fe\"",
+        "sql": "CREATE INDEX \"item_kategori_id_idx_87b606fe\" ON \"public\".\"item\" (\"kategori_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"item_kategori_id_idx_87b606fe\" exists on \"item\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"item_kategori_id_idx_87b606fe\"",
+          "i",
+          "I",
+          "\"public\".\"item\"",
+          "btree",
+          "[\"kategori_id\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.item.item_updatedBy_idx_0780dcde",
+    "label": "Create index \"item_updatedBy_idx_0780dcde\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "item_updatedBy_idx_0780dcde",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"item_updatedBy_idx_0780dcde\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"item_updatedBy_idx_0780dcde\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"item_updatedBy_idx_0780dcde\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"item_updatedBy_idx_0780dcde\"",
+        "sql": "CREATE INDEX \"item_updatedBy_idx_0780dcde\" ON \"public\".\"item\" (\"updatedBy\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"item_updatedBy_idx_0780dcde\" exists on \"item\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"item_updatedBy_idx_0780dcde\"",
+          "i",
+          "I",
+          "\"public\".\"item\"",
+          "btree",
+          "[\"updatedBy\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.kategori.kategori_createdBy_idx_ba0f792f",
+    "label": "Create index \"kategori_createdBy_idx_ba0f792f\" on \"kategori\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "kategori_createdBy_idx_ba0f792f",
+        "table": "kategori"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"kategori_createdBy_idx_ba0f792f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"kategori_createdBy_idx_ba0f792f\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"kategori_createdBy_idx_ba0f792f\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"kategori_createdBy_idx_ba0f792f\"",
+        "sql": "CREATE INDEX \"kategori_createdBy_idx_ba0f792f\" ON \"public\".\"kategori\" (\"createdBy\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"kategori_createdBy_idx_ba0f792f\" exists on \"kategori\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"kategori_createdBy_idx_ba0f792f\"",
+          "i",
+          "I",
+          "\"public\".\"kategori\"",
+          "btree",
+          "[\"createdBy\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.kategori.kategori_updatedBy_idx_0780dcde",
+    "label": "Create index \"kategori_updatedBy_idx_0780dcde\" on \"kategori\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "kategori_updatedBy_idx_0780dcde",
+        "table": "kategori"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"kategori_updatedBy_idx_0780dcde\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"kategori_updatedBy_idx_0780dcde\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"kategori_updatedBy_idx_0780dcde\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"kategori_updatedBy_idx_0780dcde\"",
+        "sql": "CREATE INDEX \"kategori_updatedBy_idx_0780dcde\" ON \"public\".\"kategori\" (\"updatedBy\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"kategori_updatedBy_idx_0780dcde\" exists on \"kategori\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"kategori_updatedBy_idx_0780dcde\"",
+          "i",
+          "I",
+          "\"public\".\"kategori\"",
+          "btree",
+          "[\"updatedBy\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.item.item_kategori_id_fkey",
+    "label": "Add foreign key \"item_kategori_id_fkey\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "item_kategori_id_fkey",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"item_kategori_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "item_kategori_id_fkey",
+          "public",
+          "\"public\".\"item\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"item_kategori_id_fkey\" on \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"item_kategori_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"item\"\nADD CONSTRAINT \"item_kategori_id_fkey\"\nFOREIGN KEY (\"kategori_id\")\nREFERENCES \"public\".\"kategori\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"item_kategori_id_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "item_kategori_id_fkey",
+          "public",
+          "\"public\".\"item\"",
+          "f",
+          "[\"kategori_id\"]",
+          "\"public\".\"kategori\"",
+          "[\"id\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.item.item_createdBy_fkey",
+    "label": "Add foreign key \"item_createdBy_fkey\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "item_createdBy_fkey",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"item_createdBy_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "item_createdBy_fkey",
+          "public",
+          "\"public\".\"item\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"item_createdBy_fkey\" on \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"item_createdBy_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"item\"\nADD CONSTRAINT \"item_createdBy_fkey\"\nFOREIGN KEY (\"createdBy\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"item_createdBy_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "item_createdBy_fkey",
+          "public",
+          "\"public\".\"item\"",
+          "f",
+          "[\"createdBy\"]",
+          "\"public\".\"user\"",
+          "[\"id\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.item.item_updatedBy_fkey",
+    "label": "Add foreign key \"item_updatedBy_fkey\" on \"item\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "item_updatedBy_fkey",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"item_updatedBy_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "item_updatedBy_fkey",
+          "public",
+          "\"public\".\"item\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"item_updatedBy_fkey\" on \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"item_updatedBy_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"item\"\nADD CONSTRAINT \"item_updatedBy_fkey\"\nFOREIGN KEY (\"updatedBy\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"item_updatedBy_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "item_updatedBy_fkey",
+          "public",
+          "\"public\".\"item\"",
+          "f",
+          "[\"updatedBy\"]",
+          "\"public\".\"user\"",
+          "[\"id\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.kategori.kategori_createdBy_fkey",
+    "label": "Add foreign key \"kategori_createdBy_fkey\" on \"kategori\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "kategori_createdBy_fkey",
+        "table": "kategori"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"kategori_createdBy_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "kategori_createdBy_fkey",
+          "public",
+          "\"public\".\"kategori\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"kategori_createdBy_fkey\" on \"kategori\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"kategori_createdBy_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"kategori\"\nADD CONSTRAINT \"kategori_createdBy_fkey\"\nFOREIGN KEY (\"createdBy\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"kategori_createdBy_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "kategori_createdBy_fkey",
+          "public",
+          "\"public\".\"kategori\"",
+          "f",
+          "[\"createdBy\"]",
+          "\"public\".\"user\"",
+          "[\"id\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.kategori.kategori_updatedBy_fkey",
+    "label": "Add foreign key \"kategori_updatedBy_fkey\" on \"kategori\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "kategori_updatedBy_fkey",
+        "table": "kategori"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"kategori_updatedBy_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "kategori_updatedBy_fkey",
+          "public",
+          "\"public\".\"kategori\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"kategori_updatedBy_fkey\" on \"kategori\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"kategori_updatedBy_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"kategori\"\nADD CONSTRAINT \"kategori_updatedBy_fkey\"\nFOREIGN KEY (\"updatedBy\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"kategori_updatedBy_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "kategori_updatedBy_fkey",
+          "public",
+          "\"public\".\"kategori\"",
+          "f",
+          "[\"updatedBy\"]",
+          "\"public\".\"user\"",
+          "[\"id\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  }
+]
