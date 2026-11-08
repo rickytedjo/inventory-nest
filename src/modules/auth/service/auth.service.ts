@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { AuthDto } from "../dto/auth.dto.js";
+import { AuthDto, RegDto } from "../dto/auth.dto.js";
 import { PrismaService } from "../../../core/database/prisma.service.js";
 import { PasswordService } from '../../../common/utils/password.service.js';
 import { db } from '../../../prisma/db.js';
@@ -27,7 +27,7 @@ export class AuthService{
         throw new NotFoundException("User not found or invalid credentials");
     }
     
-    async signUp(dto:AuthDto){
+    async signUp(dto:RegDto){
         try{
             const hashedPassword = await this.passwordService.hashPassword(dto.password);
             const data: any = { ...dto, password: hashedPassword };

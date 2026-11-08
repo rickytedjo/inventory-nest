@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Req, Session, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Render, Req, Session, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guard/auth.guard.js";
 import { ItemService } from "../service/item.service.js";
 import { createItemDto, updateItemDto } from "../dto/item.dto.js";
@@ -11,24 +11,23 @@ export class ItemController {
 
     // View Endpoints
 
-    @Get('index')
-    index() {
-        return { message: 'Item index page' };
+    @Get() @Render('item/index')
+    async index(@Query('q') q?: string) {
+      return { title: 'Items', active: 'item', q,
+               items: await this.ItemService.getAllWithCategory(q) };
     }
-
-    @Get('create')
-    createView(){
-        return { message: 'Item create page' };
+  
+    @Get('create') @Render('item/form')
+    async createView() {
+      return { title: 'Create Item', active: 'item', action: '/item', item: {},
+               categories: await this.ItemService.getCategories() };
     }
-
-    @Get('show/:id')
-    showView(@Param('id') ItemId: string){
-        return { message: `Item show page for ID: ${ItemId}` };
-    }
-
-    @Get('update/:id')
-    updateView(@Param('id') ItemId: string){
-        return { message: `Item update page for ID: ${ItemId}` };
+  
+    @Get(':id/edit') @Render('item/form')
+    async updateView(@Param('id') id: string) {
+      return { title: 'Edit Item', active: 'item', action: `/item/${id}/update`,
+               item: await this.ItemService.get(id),
+               categories: await this.ItemService.getCategories() };
     }
 
     // API Endpoints

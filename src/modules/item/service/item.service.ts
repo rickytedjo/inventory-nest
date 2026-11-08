@@ -8,6 +8,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 @Injectable()
 export class ItemService{
     constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+
+        getCategories() { return db.orm.public.Kategori.all(); }
     
         async create(dto: createItemDto, userId: string){
             const data: any = { ...dto };
@@ -27,6 +29,22 @@ export class ItemService{
             
             return data;
         }
+
+        async getAllWithCategory(q?: string) {
+          const [items, cats] = await Promise.all([
+            db.orm.public.Item.all(),
+            db.orm.public.Kategori.all(),
+          ]);
+          const names = new Map(cats.map((c: any) => [c.id, c.name]));
+          let rows = items.map((i: any) => ({ ...i, kategori_name: names.get(i.kategori_id) ?? '-' }));
+          if (q) {
+            const s = q.toLowerCase();
+            rows = rows.filter((r: any) =>
+              r.name?.toLowerCase().includes(s) || r.kategori_name.toLowerCase().includes(s));
+          }
+          return rows;
+        }
+        
         async getBy(filters: Record<string,any>){
             let query: any = db.orm.public.Item;
 

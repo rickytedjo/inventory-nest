@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Session, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Render, Session, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guard/auth.guard.js";
 import { createCategoryDto, updateCategoryDto } from "../dto/category.dto.js";
 import { CategoryService } from "../service/category.service.js";
@@ -11,25 +11,23 @@ export class CategoryController {
 
     // View Endpoints
 
-    @Get('index')
-    index() {
-        return { message: 'Category index page' };
+    @Get() @Render('category/index')
+    async index(@Query('q') q?: string) {
+      return { title: 'Categories', active: 'category', q,
+               categories: await this.categoryService.getAll() };
     }
 
-    @Get('create')
-    createView(){
-        return { message: 'Category create page' };
+    @Get('create') @Render('category/form')
+    createView() {
+      return { title: 'Create Category', active: 'category', action: '/category', category: {} };
     }
 
-    @Get('show/:id')
-    showView(@Param('id') CategoryId: string){
-        return { message: `Category show page for ID: ${CategoryId}` };
+    @Get(':id/edit') @Render('category/form')
+    async updateView(@Param('id') id: string) {
+      return { title: 'Edit Category', active: 'category',
+               action: `/category/${id}/update`, category: await this.categoryService.get(id) };
     }
 
-    @Get('update/:id')
-    updateView(@Param('id') CategoryId: string){
-        return { message: `Category update page for ID: ${CategoryId}` };
-    }
 
     // API Endpoints
 

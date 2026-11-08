@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-between mb-3">
+  <h3>Categories</h3>
+  <a href="/category/create" class="btn btn-success">+ Create</a>
+</div>
+
+<form method="GET" action="/category" class="input-group mb-3">
+  <input class="form-control" name="q" value="{{q}}" placeholder="Search...">
+  <button class="btn btn-outline-secondary">Search</button>
+</form>
+
+<table class="table table-striped align-middle">
+  <thead><tr><th>Name</th><th>Description</th><th style="width:200px">Actions</th></tr></thead>
+  <tbody>
+  {{#each categories}}
+    <tr>
+      <td>{{this.name}}</td>
+      <td>{{this.description}}</td>
+      <td class="d-flex gap-2">
+        <a href="/category/{{this.id}}/edit" class="btn btn-sm btn-warning">Update</a>
+        <form action="/category/{{this.id}}/delete" method="POST">
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  {{else}}
+    <tr><td colspan="3" class="text-center text-muted">No data</td></tr>
+  {{/each}}
+  </tbody>
+</table>

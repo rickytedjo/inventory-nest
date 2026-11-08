@@ -4,15 +4,17 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const req = ctx.switchToHttp().getRequest<Request>();
+    const res = ctx.switchToHttp().getResponse<Response>();
 
     if (!req.session?.userId || !req.session.isAuthenticated) {
-      throw new UnauthorizedException('You must be logged in');
+      res.redirect('/auth/login');
+      return false;
     }
 
     return true;

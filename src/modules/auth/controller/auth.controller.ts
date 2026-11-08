@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Req, Res, Session } from "@nestjs/common";
+import { Body, Controller, Get, Post, Render, Req, Res, Session } from "@nestjs/common";
 import { AuthService } from "../service/auth.service.js";
-import { AuthDto } from "../dto/auth.dto.js";
+import { AuthDto, RegDto } from "../dto/auth.dto.js";
 import type { Request, Response } from 'express';
 
 @Controller('auth')
@@ -8,15 +8,9 @@ export class AuthController {
     constructor(private authService: AuthService){}
 
     // View Endpoints
-    @Get('login')
-    login() {
-        return { message: 'Login page' };
-    }
+    @Get('login') @Render('auth/login')
+    login() { return { title: 'Login' }; }
 
-    @Get('register')
-    register() {
-        return { message: 'Login page' };
-    }
 
     // API Endpoint
     
@@ -24,6 +18,7 @@ export class AuthController {
     async signin(
         @Body() dto: AuthDto,
         @Req() req: Request,
+        @Res() res: Response
     ){
         const data = await this.authService.signIn(dto);
 
@@ -37,15 +32,12 @@ export class AuthController {
         req.session.userId = data.data.id;
         req.session.isAuthenticated = true;
 
-        return {
-            statusCode: 200,
-            message: 'Login successful',
-        }
+        return res.redirect('/category');   
     }
 
     @Post('signup')
     async signup(
-        @Body() dto: AuthDto){
+        @Body() dto: RegDto){
         const data = await this.authService.signUp(dto);
         if (!data.id) {
             return { statusCode: 409, message: 'User already exists' };
