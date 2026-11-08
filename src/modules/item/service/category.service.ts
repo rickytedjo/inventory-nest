@@ -22,10 +22,14 @@ export class CategoryService{
             if(!data) throw new NotFoundException("Category not found");
             return data;
         }
-        async getAll(){
-            const data = await db.orm.public.Kategori.all();
-            
-            return data;
+        async getAll(q?: string) {
+          const data = Array.from(await db.orm.public.Kategori.all()) as any[];
+          const rows = data.map((c) => ({ ...c }));
+          const s = q?.trim().toLowerCase();
+          if (!s) return rows;
+          return rows.filter((c) =>
+            String(c.name ?? '').toLowerCase().includes(s) ||
+            String(c.description ?? '').toLowerCase().includes(s));
         }
         async getBy(filters: Record<string,any>){
             let query: any = db.orm.public.Kategori;

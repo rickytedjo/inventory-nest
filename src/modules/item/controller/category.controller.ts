@@ -14,7 +14,7 @@ export class CategoryController {
     @Get() @Render('category/index')
     async index(@Query('q') q?: string) {
       return { title: 'Categories', active: 'category', q,
-               categories: await this.categoryService.getAll() };
+               categories: await this.categoryService.getAll(q) };
     }
 
     @Get('create') @Render('category/form')
