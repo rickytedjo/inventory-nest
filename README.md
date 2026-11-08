@@ -2,7 +2,7 @@
 
 ## Tentang Proyek
 
-Itemstore API adalah API sederhana yang dapat meng-handle skenario transaksi sederhana.
+Inventori adalah aplikasi implementasi MVC pengaturan barang yang menggunakan NestJS sebagai dasar framework dan Handlebars dalam implementasi view. 
 
 ## Desain Database
 
@@ -15,13 +15,16 @@ Itemstore API adalah API sederhana yang dapat meng-handle skenario transaksi sed
 
 ## Dependency
 
-Ensure you have the following installed:
+Berikut adalah tool yang diperlukan:
 
 1. **Node.js** (v26 or higher) - [Download Node.js](https://nodejs.org/)
 2. **npm** (bundled with Node.js) (latest version)
 3. **PostgreSQL** (v13 or higher) - [Download PostgreSQL](https://www.postgresql.org/)
 4. **Git** - [Download Git](https://git-scm.com/)
 
+## Informasi Kedepan
+
+Struktur dari proyek ini adalah monolithic rendering dengan struktur internal yang modular. Oleh karena dasar dari implementasi endpoint berawal dari struktur RESTful, perubahan yang diperlukan untuk akomodasi views dapat membutuhkan perubahan atau pemisahan function.  
 
 ## 🚦 Instalasi
 
