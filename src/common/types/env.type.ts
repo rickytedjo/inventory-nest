@@ -13,7 +13,7 @@ export interface DatabaseConfig {
 }
 
 export interface SecurityConfig {
-  cors: {
+  session: {
     origins: string[];
     methods: string[];
     allowedHeaders: string[];

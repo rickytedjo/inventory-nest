@@ -1,8 +1,40 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module.js';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as hbs from 'handlebars';
+import session from 'express-session';
+import { PrismaExceptionFilter } from './common/filter/prisma.filter.js';
+import { DbExceptionFilter } from './common/filter/db.filter.js';
+
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist:true,
+      transform:true,
+      forbidNonWhitelisted: true
+    }),
+  );
+
+  app.useGlobalFilters(new PrismaExceptionFilter(), new DbExceptionFilter());
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || 'DefaultSecretKey',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 },
+    }),
+  );
+
+  app.useStaticAssets(join(import.meta.dirname, '..', 'public'));
+  app.setBaseViewsDir(join(import.meta.dirname, '..', 'views'));
+  app.setViewEngine('hbs');
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();

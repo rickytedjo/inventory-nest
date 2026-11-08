@@ -1,5 +1,5 @@
 import { registerAs } from "@nestjs/config";
-import { AppConfig } from "../types";
+import { AppConfig } from "../../common/types/env.type.js";
 
 export default registerAs<AppConfig>('app',() => ({
     name: process.env.APP_NAME || 'APP',  

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "setDefault.item.price",
+    "label": "Set default on \"item\".\"price\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "price",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"price\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "item",
+          "price"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"price\" on \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "set default on \"price\"",
+        "sql": "ALTER TABLE \"public\".\"item\" ALTER COLUMN \"price\" SET DEFAULT 0"
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "setDefault.item.stock",
+    "label": "Set default on \"item\".\"stock\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "stock",
+        "table": "item"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"stock\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "item",
+          "stock"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"stock\" on \"item\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "set default on \"stock\"",
+        "sql": "ALTER TABLE \"public\".\"item\" ALTER COLUMN \"stock\" SET DEFAULT 0"
+      }
+    ],
+    "postcheck": []
+  }
+]
